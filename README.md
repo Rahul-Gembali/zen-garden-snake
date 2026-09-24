@@ -2,6 +2,8 @@
 
 > A meditative, procedurally rendered Japanese Zen Garden Snake game built with vanilla HTML5 Canvas 2D and the Web Audio API. Inspired by traditional dry landscape (*karesansui*) aesthetics, Kintsugi golden joinery, and Urushi black lacquerware.
 
+![Zen Garden Snake Banner](og-image.png)
+
 [![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen)](https://Rahul-Gembali.github.io/zen-garden-snake/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
