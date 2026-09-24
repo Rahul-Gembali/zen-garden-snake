@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Zen Garden Snake (枯山水 蛇)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Zen Minimalist HUD -->
+    <header id="hud">
+      <div class="hud-left">
+        <h1 class="zen-title">枯山水 <span class="sub-title">Zen Snake</span></h1>
+        <div class="stats-group">
+          <div class="stat-item">
+            <span class="stat-label">Length</span>
+            <span id="score-display" class="stat-value">1</span>
+          </div>
+          <div class="stat-divider">•</div>
+          <div class="stat-item">
+            <span class="stat-label">Best</span>
+            <span id="highscore-display" class="stat-value">1</span>
+          </div>
+          <div class="stat-divider">•</div>
+          <div class="stat-item">
+            <span id="mode-badge" class="mode-badge classic">Classic</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <button id="btn-mode" class="hud-btn" title="Toggle Zen / Classic Mode">
+          <span class="icon">☯</span>
+          <span class="btn-text">Zen Mode</span>
+        </button>
+        <button id="btn-sound" class="hud-btn" title="Toggle Sound">
+          <span id="sound-icon" class="icon">🔊</span>
+          <span id="sound-text" class="btn-text">Sound</span>
+        </button>
+        <button id="btn-pause" class="hud-btn" title="Pause Game (Space)">
+          <span id="pause-icon" class="icon">⏸</span>
+          <span id="pause-text" class="btn-text">Pause</span>
+        </button>
+        <button id="btn-restart" class="hud-btn" title="Restart Garden (R)">
+          <span class="icon">⟳</span>
+          <span class="btn-text">Restart</span>
+        </button>
+        <button id="btn-fullscreen" class="hud-btn" title="Toggle Fullscreen (F)">
+          <span id="fs-icon" class="icon">⛶</span>
+          <span id="fs-text" class="btn-text">Full</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Golden Blessing Active Indicator (Simple, Short, Minimalist Pill) -->
+    <div id="buff-badge" class="buff-badge hidden">
+      <span class="buff-icon">✦</span>
+      <span id="buff-timer" class="buff-time">5s</span>
+    </div>
+
+    <!-- 1:1 Square Zen Garden Stage -->
+    <main id="garden-stage">
+      <div id="garden-frame">
+        <canvas id="sandCanvas"></canvas>
+        <!-- Ambient Vignette & Shadow Overlay -->
+        <div class="screen-vignette"></div>
+      </div>
+    </main>
+
+    <!-- Mobile Touch D-Pad (Visible on touch/small viewports) -->
+    <div id="mobile-dpad" class="mobile-controls">
+      <button id="dpad-up" class="dpad-btn up" aria-label="Up">▲</button>
+      <div class="dpad-middle">
+        <button id="dpad-left" class="dpad-btn left" aria-label="Left">◀</button>
+        <div class="dpad-center"></div>
+        <button id="dpad-right" class="dpad-btn right" aria-label="Right">▶</button>
+      </div>
+      <button id="dpad-down" class="dpad-btn down" aria-label="Down">▼</button>
+    </div>
+
+    <!-- Desktop Bottom Hints -->
+    <footer id="hud-footer">
+      <div class="control-hints">
+        <span><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Guide</span>
+        <span>•</span>
+        <span>Swipe on mobile</span>
+        <span>•</span>
+        <span><kbd>Space</kbd> Pause</span>
+        <span>•</span>
+        <span><kbd>R</kbd> Restart</span>
+      </div>
+    </footer>
+
+    <!-- Pause Modal Overlay -->
+    <div id="pause-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-symbol">静</div>
+        <h2 class="modal-title">Stillness</h2>
+        <p class="modal-desc">The garden waits in quiet contemplation.</p>
+        <div class="modal-actions">
+          <button id="btn-resume" class="zen-action-btn primary">Resume Journey</button>
+          <button id="btn-pause-restart" class="zen-action-btn secondary">Rake Afresh</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over Modal Overlay -->
+    <div id="gameover-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-symbol">円</div>
+        <h2 class="modal-title">Cycle Complete</h2>
+        <p class="modal-desc">The creature has returned to the earth.</p>
+        <div class="final-stats">
+          <div class="final-stat-box">
+            <span class="box-number" id="final-score">0</span>
+            <span class="box-label">Fragments Gathered</span>
+          </div>
+          <div class="final-stat-box">
+            <span class="box-number" id="final-best">0</span>
+            <span class="box-label">Longest Harmony</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="btn-play-again" class="zen-action-btn primary">Begin Anew</button>
+          <button id="btn-admire" class="zen-action-btn secondary">Admire Garden</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating "Return to Menu" button when in Admire Mode -->
+    <button id="btn-exit-admire" class="hud-btn admire-exit-btn hidden">
+      <span>✕ Return to Garden</span>
+    </button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/snake.js"></script>
+  <script src="js/collectibles.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

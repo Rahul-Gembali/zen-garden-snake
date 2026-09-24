@@ -1,0 +1,653 @@
+/* ==========================================================================
+   Zen Garden Snake (枯山水 蛇) - Master Stylesheet
+   Square 1:1 Aspect Ratio & Mobile Responsive Architecture
+   ========================================================================== */
+
+:root {
+  --sand-base: #ece4d4;
+  --sand-light: #f5f0e6;
+  --sand-dark: #dfd5c2;
+  --ink-black: #181716;
+  --ink-gray: #4a4642;
+  --kintsugi-gold: #c89d38;
+  --kintsugi-bright: #eec45c;
+  --sakura-pink: #e89bb2;
+  --rice-paper: rgba(247, 243, 235, 0.88);
+  --rice-paper-border: rgba(185, 172, 155, 0.4);
+  --ui-shadow: 0 8px 24px rgba(80, 70, 60, 0.08);
+  --font-serif: 'Cormorant Garamond', 'Noto Serif JP', serif;
+  --font-display: 'Cinzel', 'Noto Serif JP', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: #dfd6c5;
+  background-image: radial-gradient(circle at center, #eee7db 0%, #dbd1be 100%);
+  font-family: var(--font-serif);
+  color: var(--ink-black);
+  touch-action: none;
+}
+
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  touch-action: none;
+}
+
+/* ==========================================================================
+   Header HUD
+   ========================================================================== */
+
+#hud {
+  width: 100%;
+  max-width: 900px;
+  padding: 14px 20px 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.hud-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.zen-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--ink-black);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+}
+
+.zen-title .sub-title {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--ink-gray);
+  font-style: italic;
+}
+
+.stats-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-gray);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink-black);
+}
+
+.stat-divider {
+  color: rgba(140, 125, 110, 0.4);
+}
+
+.mode-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--rice-paper-border);
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ink-gray);
+  backdrop-filter: blur(4px);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.mode-badge.zen {
+  background: rgba(200, 157, 56, 0.15);
+  border-color: rgba(200, 157, 56, 0.45);
+  color: #8c6a1b;
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-btn {
+  background: var(--rice-paper);
+  border: 1px solid var(--rice-paper-border);
+  padding: 7px 13px;
+  border-radius: 24px;
+  color: var(--ink-black);
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.hud-btn .icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.hud-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--kintsugi-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(120, 100, 70, 0.15);
+}
+
+.hud-btn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Golden Leaf Blessing Power-Up Banner
+   ========================================================================== */
+
+.buff-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 248, 225, 0.95);
+  border: 1.5px solid var(--kintsugi-bright);
+  box-shadow: 0 4px 16px rgba(238, 196, 92, 0.35);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 0.9rem;
+  color: #725206;
+  z-index: 25;
+  margin-bottom: 4px;
+  animation: buffPulse 1.6s infinite ease-in-out;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes buffPulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(238, 196, 92, 0.35); transform: scale(1); }
+  50% { box-shadow: 0 6px 22px rgba(238, 196, 92, 0.55); transform: scale(1.03); }
+}
+
+.buff-badge.hidden {
+  display: none !important;
+}
+
+.buff-icon {
+  font-size: 0.95rem;
+  color: #d99726;
+}
+
+.buff-time {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #b87a05;
+}
+
+/* ==========================================================================
+   1:1 Square Zen Garden Stage & Frame
+   ========================================================================== */
+
+#garden-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+  padding: 6px 12px;
+  z-index: 5;
+  touch-action: none;
+}
+
+#garden-frame {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(70, 55, 40, 0.22),
+              0 0 0 1px rgba(185, 172, 155, 0.45);
+  overflow: hidden;
+  background-color: var(--sand-base);
+  touch-action: none;
+}
+
+canvas#sandCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.screen-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: inset 0 0 80px rgba(120, 105, 90, 0.18),
+              inset 0 0 25px rgba(90, 75, 60, 0.1);
+}
+
+/* ==========================================================================
+   Mobile Touch Controls (D-Pad)
+   ========================================================================== */
+
+.mobile-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0 12px 0;
+  z-index: 20;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+.dpad-middle {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.dpad-center {
+  width: 20px;
+  height: 20px;
+}
+
+.dpad-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--rice-paper);
+  border: 1.5px solid var(--rice-paper-border);
+  color: var(--ink-black);
+  font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(70, 60, 50, 0.12);
+  backdrop-filter: blur(8px);
+  outline: none;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.dpad-btn:active {
+  background: #ffffff;
+  border-color: var(--kintsugi-gold);
+  transform: scale(0.92);
+  box-shadow: 0 1px 6px rgba(200, 157, 56, 0.3);
+}
+
+/* On desktop with mouse/keyboard, hide mobile D-pad unless screen is tiny */
+@media (min-width: 900px) and (hover: hover) {
+  .mobile-controls {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Desktop Footer Hints
+   ========================================================================== */
+
+#hud-footer {
+  padding: 8px 20px 14px 20px;
+  display: flex;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.4s ease;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+#hud-footer:hover {
+  opacity: 0.95;
+}
+
+.control-hints {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--ink-gray);
+  background: rgba(247, 243, 235, 0.75);
+  padding: 5px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(185, 172, 155, 0.3);
+  backdrop-filter: blur(6px);
+}
+
+.control-hints kbd {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(180, 165, 145, 0.4);
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* ==========================================================================
+   Modals (Pause & Game Over)
+   ========================================================================== */
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(223, 214, 197, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.modal-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.modal-card {
+  background: var(--rice-paper);
+  border: 1px solid var(--rice-paper-border);
+  box-shadow: 0 20px 54px rgba(70, 60, 50, 0.2);
+  border-radius: 16px;
+  padding: 36px 44px;
+  max-width: 400px;
+  width: 88%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-symbol {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2.6rem;
+  color: var(--kintsugi-gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 1.05rem;
+  color: var(--ink-gray);
+  margin-bottom: 22px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.final-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.final-stat-box {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(185, 172, 155, 0.3);
+  border-radius: 10px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.box-number {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink-black);
+}
+
+.box-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-gray);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.zen-action-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 28px;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.zen-action-btn.primary {
+  background: var(--ink-black);
+  color: #fff;
+  border: 1px solid var(--ink-black);
+  box-shadow: 0 4px 14px rgba(24, 23, 22, 0.25);
+}
+
+.zen-action-btn.primary:hover {
+  background: #2a2927;
+  border-color: var(--kintsugi-gold);
+  transform: translateY(-2px);
+}
+
+.zen-action-btn.secondary {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink-black);
+  border: 1px solid var(--rice-paper-border);
+}
+
+.zen-action-btn.secondary:hover {
+  background: #fff;
+  border-color: var(--kintsugi-gold);
+  transform: translateY(-2px);
+}
+
+/* Admire Garden Exit Button */
+.admire-exit-btn {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  background: var(--ink-black);
+  color: #fff;
+  border: 1px solid var(--kintsugi-gold);
+}
+
+.admire-exit-btn:hover {
+  background: #2a2926;
+  color: #fff;
+}
+
+.admire-exit-btn.hidden {
+  display: none;
+}
+
+/* ==========================================================================
+   Mobile Responsive Tweaks
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  #hud {
+    padding: 10px 14px 6px 14px;
+    gap: 8px;
+  }
+
+  .zen-title {
+    font-size: 1.05rem;
+  }
+
+  .zen-title .sub-title {
+    font-size: 0.85rem;
+  }
+
+  .stats-group {
+    font-size: 0.82rem;
+  }
+
+  .hud-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+
+  .hud-btn .btn-text {
+    display: none; /* Icon-only on mobile */
+  }
+
+  #hud-footer {
+    display: none;
+  }
+
+  .modal-card {
+    padding: 26px 20px;
+  }
+}
+
+/* ==========================================================================
+   True Borderless Edge-to-Edge Fullscreen Mode (No sidebars!)
+   ========================================================================== */
+
+#game-container.fullscreen-active {
+  background: var(--sand-base);
+  padding: 0;
+}
+
+#game-container.fullscreen-active #garden-stage {
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#game-container.fullscreen-active #garden-frame {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  aspect-ratio: unset !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+#game-container.fullscreen-active #hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  max-width: 100%;
+  padding: 12px 24px;
+  background: linear-gradient(to bottom, rgba(236, 228, 212, 0.65), transparent);
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+#game-container.fullscreen-active #hud:hover {
+  opacity: 1;
+}
+
+#game-container.fullscreen-active #hud .hud-right,
+#game-container.fullscreen-active #hud .hud-left {
+  pointer-events: auto;
+}
+
+#game-container.fullscreen-active .buff-badge {
+  position: absolute;
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#game-container.fullscreen-active #hud-footer {
+  display: none !important;
+}
+
+#game-container.fullscreen-active .mobile-controls {
+  display: none !important;
+}
